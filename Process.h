@@ -14,7 +14,7 @@ Probably could create processes on the fly
 
 class Process {
 private:
-	int m_burstTime, m_pid, m_timeRemaining, m_numberProcesses;
+	int m_burstTime, m_pid, m_timeRemaining;
 	bool m_hasArrived;
 
 public:
@@ -26,4 +26,38 @@ public:
 	void setTimeRemaining(int newTime);
 	void setHasArrived();
 };
+
+#include "stdafx.h"
+
+Process::Process(int pid, int burstTime) {
+	m_pid = pid;
+	m_burstTime = burstTime;
+	m_timeRemaining = burstTime;
+	m_hasArrived = false;
+}
+
+const int & Process::getTimeRemaining() {
+	return m_timeRemaining;
+}
+
+const int & Process::getBurstTime() {
+	return m_burstTime;
+}
+
+bool Process::hasArrived() {
+	return m_hasArrived;
+}
+
+const int & Process::getPid() {
+	return m_pid;
+}
+
+void Process::setTimeRemaining(int newTime) {
+	m_timeRemaining = newTime;
+}
+
+void Process::setHasArrived() {
+	m_hasArrived = true;
+}
+
 
