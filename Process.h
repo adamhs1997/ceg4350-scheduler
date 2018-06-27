@@ -27,8 +27,6 @@ public:
 	void setHasArrived();
 };
 
-#include "stdafx.h"
-
 Process::Process(int pid, int burstTime) {
 	m_pid = pid;
 	m_burstTime = burstTime;
