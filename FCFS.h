@@ -9,7 +9,7 @@ Pick up and finish next process
 */
 
 #include "Process.h"
-#include <Queue>
+#include <queue>
 #include <iostream>
 
 using namespace std;
