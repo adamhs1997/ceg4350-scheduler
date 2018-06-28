@@ -19,12 +19,19 @@ private:
 
 public:
 	Process(int pid, int burstTime);
+	enum ProcessState{READY, RUNNING, TERMINATED};
 	const int& getTimeRemaining();
 	const int& getBurstTime();
 	bool hasArrived();
 	const int& getPid();
 	void setTimeRemaining(int newTime);
 	void setHasArrived();
+	void setState(Process::ProcessState state);
+	Process::ProcessState getState();
+
+private:
+	Process::ProcessState m_state;
+
 };
 
 Process::Process(int pid, int burstTime) {
@@ -32,6 +39,7 @@ Process::Process(int pid, int burstTime) {
 	m_burstTime = burstTime;
 	m_timeRemaining = burstTime;
 	m_hasArrived = false;
+	m_state = ProcessState::READY;
 }
 
 const int & Process::getTimeRemaining() {
@@ -58,4 +66,11 @@ void Process::setHasArrived() {
 	m_hasArrived = true;
 }
 
+void Process::setState(Process::ProcessState state) {
+	m_state = state;
+}
+
+Process::ProcessState Process::getState() {
+	return m_state;
+}
 
