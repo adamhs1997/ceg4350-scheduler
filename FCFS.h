@@ -20,16 +20,18 @@ class FCFS {
 private:
 	queue<Process> m_readyQueue;
 	int* m_processArray;
+	int m_numProcesses;
 
 public:
-	FCFS(int* processInfo); // Array is to make all necc processes
+	FCFS(int* processInfo, int numProcesses); // Array is to make all necc processes
 	void schedule();
 		
 };
 
 //Build the FCFS scheduler object
-FCFS::FCFS(int* processInfo) {
+FCFS::FCFS(int* processInfo, int numProcesses) {
 	m_processArray = processInfo;
+	m_numProcesses = numProcesses;
 }
 
 //The FCFS master scheduler!!!
@@ -44,13 +46,16 @@ void FCFS::schedule() {
 	//Track the current burst time
 	int burstTimeRemaining = 0;
 
+	//Track processes that have been completed
+	int numberProcessesComplete = 0;
+
 	//Track our currently running process
 	//Initialize to "null" process with pid -1
 	Process current(-1, 0);
 
 	//Run the scheduler in a loop until we are out of processes
 	//to schedule
-	while (true) { //TODO: make not a forever loop
+	while (numberProcessesComplete != m_numProcesses) {
 		//Check to see if any process has arrived yet
 		if (clock == m_processArray[arrayIndex]) {
 			//If it has, add it to ready queue
@@ -59,7 +64,6 @@ void FCFS::schedule() {
 			m_readyQueue.push(newProcess);
 
 			//Increment the array index to next process arrive time
-			//TODO: keep from running off array
 			arrayIndex += 3;
 		}
 
@@ -67,21 +71,24 @@ void FCFS::schedule() {
 		if (current.getPid() != -1 && burstTimeRemaining == 0) {
 			current.setState(current.TERMINATED);
 			cout << "PID " << current.getPid() << " has finished at time "
-				<< clock << " ms";
+				<< clock << " ms\n";
 			current = Process(-1, 0);
 			//Officially kill the process by popping from queue
 			m_readyQueue.pop();
+			//Count up the processes we've finished
+			numberProcessesComplete++;
 		}
 		
 		//Get us a new process if nothing else going on
 		if (current.getPid() == -1 && m_readyQueue.size() != 0) {
+			current.setState(current.RUNNING);
 			current = m_readyQueue.front();
 			burstTimeRemaining = current.getBurstTime();
 			cout << "PID " << current.getPid() << " starts running at time "
-				<< clock << " ms";
+				<< clock << " ms\n";
 		}
 
-		//Run the clock
+		//Run the clock, update time remaining
 		clock++;
 		burstTimeRemaining--;
 		this_thread::sleep_for(chrono::milliseconds(1));
