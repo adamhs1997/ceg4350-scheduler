@@ -11,6 +11,8 @@ Pick up and finish next process
 #include "Process.h"
 #include <queue>
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 using namespace std;
 
@@ -67,16 +69,22 @@ void FCFS::schedule() {
 			cout << "PID " << current.getPid() << " has finished at time "
 				<< clock << " ms";
 			current = Process(-1, 0);
+			//Officially kill the process by popping from queue
+			m_readyQueue.pop();
 		}
 		
 		//Get us a new process if nothing else going on
 		if (current.getPid() == -1 && m_readyQueue.size() != 0) {
 			current = m_readyQueue.front();
+			burstTimeRemaining = current.getBurstTime();
+			cout << "PID " << current.getPid() << " starts running at time "
+				<< clock << " ms";
 		}
-			//If not, pull the first one out of the queue
-			//If so, continue
-			//If no more processes and last one finished, kill
-		//Sleep 1ms for the heck of it, make it realistic
+
+		//Run the clock
+		clock++;
+		burstTimeRemaining--;
+		this_thread::sleep_for(chrono::milliseconds(1));
 	}
 }
 
