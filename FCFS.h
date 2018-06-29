@@ -20,10 +20,10 @@ class FCFS {
 private:
 	queue<Process> m_readyQueue;
 	int* m_processArray;
-	void schedule();
 
 public:
 	FCFS(int* processInfo); // Array is to make all necc processes
+	void schedule();
 		
 };
 

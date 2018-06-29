@@ -9,6 +9,7 @@ Project 1
 
 #include "FileHandler.h"
 #include "Process.h"
+#include "FCFS.h"
 
 int main(int argc, char** argv) {
 	//Read data from the input file
@@ -23,6 +24,9 @@ int main(int argc, char** argv) {
 	//PROCESSES WILL BE CREATED IN EACH SCHEDULER ALGO
 	//TODO: Make switch stmt that goes by whatever algo passed in
 
+	//Testing the FCFS algo
+	FCFS fcfs_scheduler(arr);
+	fcfs_scheduler.schedule();
 
 	//Test code for process class...
 	cout << "\n";
