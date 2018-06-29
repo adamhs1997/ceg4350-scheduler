@@ -8,7 +8,7 @@ Project 1
 //Driver program for the scheduler simulation
 
 #include "FileHandler.h"
-#include "Process.h"
+//#include "Process.h"
 #include "FCFS.h"
 
 int main(int argc, char** argv) {
@@ -16,7 +16,8 @@ int main(int argc, char** argv) {
 	//TODO: Change this from the hard-set processes file to the cmd arg
 	FileHandler mfh;
 	int* arr = mfh.parseData("processes.txt");
-        cout << "# processes " << mfh.getNumberProcesses() << "\n";
+	int numberProcesses = mfh.getNumberProcesses();
+    cout << "# processes " << mfh.getNumberProcesses() << "\n";
 	for (int i = 0; i < mfh.getNumberProcesses() * 3; i++) {
 		cout << arr[i] << " ";
 	}
@@ -25,7 +26,7 @@ int main(int argc, char** argv) {
 	//TODO: Make switch stmt that goes by whatever algo passed in
 
 	//Testing the FCFS algo
-	FCFS fcfs_scheduler(arr);
+	FCFS fcfs_scheduler(arr, numberProcesses);
 	fcfs_scheduler.schedule();
 
 	//Test code for process class...
