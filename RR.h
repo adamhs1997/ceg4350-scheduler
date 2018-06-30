@@ -73,7 +73,7 @@ void RR::schedule() {
 			cout << "PID " << current.getPid() << " has finished at time "
 				<< clock << " ms\n";
 			current = Process(-1, 0);
-
+			currentRunTime = 0; //Be kind, rewind
 			//Count up the processes we've finished
 			numberProcessesComplete++;
 		}
