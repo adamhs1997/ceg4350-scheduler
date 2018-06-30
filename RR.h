@@ -102,6 +102,7 @@ void RR::schedule() {
 		//Run the clock, update time remaining
 		clock++;
 		burstTimeRemaining--;
+		currentRunTime++;
 		this_thread::sleep_for(chrono::milliseconds(1));
 	}
 }
