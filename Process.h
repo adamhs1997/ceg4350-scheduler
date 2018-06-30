@@ -1,3 +1,6 @@
+#ifndef HEADER_H
+#define HEADER_H
+
 //Class to create "process" from input file
 
 /*
@@ -74,3 +77,4 @@ Process::ProcessState Process::getState() {
 	return m_state;
 }
 
+#endif
