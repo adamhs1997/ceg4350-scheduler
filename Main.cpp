@@ -8,16 +8,17 @@ Project 1
 //Driver program for the scheduler simulation
 
 #include "FileHandler.h"
-//#include "Process.h"
+#include "Process.h"
 #include "FCFS.h"
+#include "RR.h"
 
 int main(int argc, char** argv) {
 	//Read data from the input file
 	//TODO: Change this from the hard-set processes file to the cmd arg
 	FileHandler mfh;
-	int* arr = mfh.parseData("processes.txt");
+	int* arr = mfh.parseData("longer_processes.txt");
 	int numberProcesses = mfh.getNumberProcesses();
-    cout << "# processes " << mfh.getNumberProcesses() << "\n";
+    	cout << "# processes " << mfh.getNumberProcesses() << "\n";
 	for (int i = 0; i < mfh.getNumberProcesses() * 3; i++) {
 		cout << arr[i] << " ";
 	}
@@ -28,6 +29,10 @@ int main(int argc, char** argv) {
 	//Testing the FCFS algo
 	FCFS fcfs_scheduler(arr, numberProcesses);
 	fcfs_scheduler.schedule();
+
+	//Test RR algo
+	RR rr_scheduler(arr, numberProcesses, 8);
+	rr_scheduler.schedule();
 
 	//Test code for process class...
 	cout << "\n";
