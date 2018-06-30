@@ -47,6 +47,9 @@ void RR::schedule() {
 	//Track processes that have been completed
 	int numberProcessesComplete = 0;
 
+	//Track how long this process has been running
+	int currentRunTime = 0;
+
 	//Track our currently running process
 	//Initialize to "null" process with pid -1
 	Process current(-1, 0);
@@ -70,16 +73,27 @@ void RR::schedule() {
 			cout << "PID " << current.getPid() << " has finished at time "
 				<< clock << " ms\n";
 			current = Process(-1, 0);
-			//Officially kill the process by popping from queue
-			m_readyQueue.pop();
+
 			//Count up the processes we've finished
 			numberProcessesComplete++;
+		}
+
+		//See if it's time to preempt the current process
+		if (current.getPid() != -1 && currentRunTime == m_quantum) {
+			current.setState(current.READY);
+			cout << "PID " << current.getPid() << " is preempted at time "
+				<< clock << " ms\n";
+			current.setTimeRemaining(current.getTimeRemaining() - m_quantum);
+			m_readyQueue.push(current);
+			currentRunTime = 0; //Reset for next process
+			current = Process(-1, 0);
 		}
 
 		//Get us a new process if nothing else going on
 		if (current.getPid() == -1 && m_readyQueue.size() != 0) {
 			current.setState(current.RUNNING);
 			current = m_readyQueue.front();
+			m_readyQueue.pop();
 			burstTimeRemaining = current.getBurstTime();
 			cout << "PID " << current.getPid() << " starts running at time "
 				<< clock << " ms\n";
