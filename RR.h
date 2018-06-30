@@ -94,7 +94,7 @@ void RR::schedule() {
 			current.setState(current.RUNNING);
 			current = m_readyQueue.front();
 			m_readyQueue.pop();
-			burstTimeRemaining = current.getBurstTime();
+			burstTimeRemaining = current.getTimeRemaining();
 			cout << "PID " << current.getPid() << " starts running at time "
 				<< clock << " ms\n";
 		}
