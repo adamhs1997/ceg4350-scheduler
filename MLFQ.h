@@ -21,8 +21,6 @@ private:
 	int m_numProcesses;
 	int m_currentExecutionTime;
 	void checkCompletion();
-	void scheduleRR(int quantum);
-	void scheduleFCFS();
 
 public:
 	MLFQ(int* processInfo, int numProcesses);
@@ -92,20 +90,24 @@ void MLFQ::schedule() {
 		}
 
 		//See if anything in q0 to run
-		if (!m_p0Queue.empty())
+		if (!m_p0Queue.empty()) {
 			m_p0Queue.front().setTimeRemaining(m_p0Queue.front().getTimeRemaining() - 1);
+			timeInQ0++;
+		}
 
 		//See if anything in q1 to run
-		else if (!m_p1Queue.empty())
+		else if (!m_p1Queue.empty()) {
 			m_p1Queue.front().setTimeRemaining(m_p1Queue.front().getTimeRemaining() - 1);
+			timeInQ1++;
+		}
 
 		//Otherwise, we run FCFS
 		else
-			scheduleFCFS();
+			m_p2Queue.front().setTimeRemaining(m_p2Queue.front().getTimeRemaining() - 1);
 
-		//Run the clock, update time remaining
+		//Run the clock
 		clock++;
-		this_thread::sleep_for(chrono::milliseconds(1));
+		this_thread::sleep_for(chrono::seconds(1));
 	}
 
 }
@@ -120,12 +122,4 @@ void MLFQ::checkCompletion() {
 		if (queue.front().getTimeRemaining() == 0)
 			queue.pop();
 	}
-}
-
-//Does RR scheduling with 8/16 ms quantum
-void MLFQ::scheduleRR(int quantum) {
-	if (!m_p0Queue.empty())
-		m_p0Queue.front().setTimeRemaining(m_p0Queue.front().getTimeRemaining() - 1);
-	else
-		m_p1Queue.front().setTimeRemaining(m_p1Queue.front().getTimeRemaining() - 1);
 }
