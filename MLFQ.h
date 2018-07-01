@@ -35,6 +35,7 @@ MLFQ::MLFQ(int* processInfo, int numProcesses) {
 	m_numProcesses = numProcesses;
 }
 
+//Main MLFQ scheduler, only public function
 void MLFQ::schedule() {
 	//CanNOT really rely on other RR and FCFS, as these work in batch
 	//This will be new batch scheduler, relying on parallel RR/FCFS implementation
@@ -97,4 +98,16 @@ void MLFQ::schedule() {
 		this_thread::sleep_for(chrono::milliseconds(1));
 	}
 
+}
+
+//Use to see if any process finished on last cycle
+void MLFQ::checkCompletion() {
+	queue<Process> queues[] = { m_p0Queue, m_p1Queue, m_p2Queue };
+
+	//Loop across each queue, look for heads that are complete
+	for (auto queue : queues) {
+		//NOTE: Must reassign queue.front with current for this to work
+		if (queue.front().getTimeRemaining() == 0)
+			queue.pop();
+	}
 }
