@@ -21,7 +21,6 @@ int* FileHandler::parseData(string filename) {
 	//Read each line from file, place in vector
 	ifstream openFile(filename);
 	string line;
-	getline(openFile, line); //elim header row
 	int nextNumber;
 	while (openFile) {
 		openFile >> nextNumber;
