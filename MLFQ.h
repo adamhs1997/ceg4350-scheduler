@@ -77,6 +77,8 @@ void MLFQ::schedule() {
 
 		//See if need to preempt q0 to q1
 		if (timeInQ0 == 8) {
+			cout << "PID " << m_p0Queue.front().getPid()
+				<< " is preempted into Queue 1 at time " << clock << " ms\n";
 			m_p1Queue.push(m_p0Queue.front());
 			m_p0Queue.pop();
 			timeInQ0 = 0;
@@ -84,6 +86,8 @@ void MLFQ::schedule() {
 
 		//See if need to preempt q1 to q2
 		if (timeInQ1 == 16) {
+			cout << "PID " << m_p0Queue.front().getPid()
+				<< " is preempted into Queue 2 at time " << clock << " ms\n";
 			m_p2Queue.push(m_p1Queue.front());
 			m_p1Queue.pop();
 			timeInQ1 = 0;
@@ -91,19 +95,27 @@ void MLFQ::schedule() {
 
 		//See if anything in q0 to run
 		if (!m_p0Queue.empty()) {
+			if (timeInQ0 == 0)
+				cout << "PID " << m_p0Queue.front().getPid() 
+					<< " starts running at time " << clock << " ms\n";
 			m_p0Queue.front().setTimeRemaining(m_p0Queue.front().getTimeRemaining() - 1);
 			timeInQ0++;
 		}
 
 		//See if anything in q1 to run
 		else if (!m_p1Queue.empty()) {
+			if (timeInQ1 == 0)
+				cout << "PID " << m_p1Queue.front().getPid()
+					<< " continues running at time " << clock << " ms\n";
 			m_p1Queue.front().setTimeRemaining(m_p1Queue.front().getTimeRemaining() - 1);
 			timeInQ1++;
 		}
 
 		//Otherwise, we run FCFS
-		else
+		else {
+			//TODO: figure out how to print sthg for first time here
 			m_p2Queue.front().setTimeRemaining(m_p2Queue.front().getTimeRemaining() - 1);
+		}
 
 		//Run the clock
 		clock++;
@@ -118,8 +130,10 @@ void MLFQ::checkCompletion() {
 
 	//Loop across each queue, look for heads that are complete
 	for (auto queue : queues) {
-		//NOTE: Must reassign queue.front with current for this to work
-		if (queue.front().getTimeRemaining() == 0)
+		if (queue.front().getTimeRemaining() == 0) {
+			cout << "PID " << queue.front().getPid()
+				<< " has finished at time " << clock << " ms\n";
 			queue.pop();
+		}
 	}
 }
