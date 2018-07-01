@@ -19,6 +19,10 @@ private:
 	queue<Process> m_p0Queue, m_p1Queue, m_p2Queue;
 	int* m_processArray;
 	int m_numProcesses;
+	void checkCompletion();
+	void scheduleRR8();
+	void scheduleRR16();
+	void scheduleFCFS();
 
 public:
 	MLFQ(int* processInfo, int numProcesses);
@@ -42,5 +46,55 @@ void MLFQ::schedule() {
 	//"" q1 (else)
 	//"" q2 (else)
 
+	//Create a dummy clock variable
+	int clock = 0;
+
+	//Pointer to right index in process array
+	//Keeps track of which is next to be born
+	int arrayIndex = 1;
+
+	//Track the current burst time
+	int burstTimeRemaining = 0;
+
+	//Track processes that have been completed
+	int numberProcessesComplete = 0;
+
+	//Track our currently running process
+	//Initialize to "null" process with pid -1
+	Process current(-1, 0);
+
+	//Run the scheduler in a loop until we are out of processes to schedule
+	while (numberProcessesComplete != m_numProcesses) {
+		//Check to see if any process has arrived yet
+		if (clock == m_processArray[arrayIndex]) {
+			//If it has, add it to queue 0 (highest priority)
+			Process newProcess(m_processArray[arrayIndex - 1],
+				m_processArray[arrayIndex + 1]);
+			m_p0Queue.push(newProcess);
+
+			//Increment the array index to next process arrive time
+			arrayIndex += 3;
+		}
+
+		//Check if any process has finished
+		checkCompletion();
+
+		//See if anything in q0 to run
+		if (!m_p0Queue.empty())
+			scheduleRR8();
+
+		//See if anything in q1 to run
+		else if (!m_p1Queue.empty())
+			scheduleRR16();
+
+		//Otherwise, we run FCFS
+		else
+			scheduleFCFS();
+
+		//Run the clock, update time remaining
+		clock++;
+		burstTimeRemaining--;
+		this_thread::sleep_for(chrono::milliseconds(1));
+	}
 
 }
