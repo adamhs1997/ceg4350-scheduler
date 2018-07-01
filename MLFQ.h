@@ -54,7 +54,7 @@ void MLFQ::schedule() {
 	int arrayIndex = 1;
 
 	//Track time process spent in RR each queue
-	int timeInQ0, timeInQ1;
+	int timeInQ0 = 0, timeInQ1 = 0;
 
 	//Track processes that have been completed
 	int numberProcessesComplete = 0;
