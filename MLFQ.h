@@ -32,4 +32,15 @@ MLFQ::MLFQ(int* processInfo, int numProcesses) {
 }
 
 void MLFQ::schedule() {
+	//CanNOT really rely on other RR and FCFS, as these work in batch
+	//This will be new batch scheduler, relying on parallel RR/FCFS implementation
+
+	//Start running a clock
+	//See if new processes have arrived
+	//Add any new process to q0
+	//Run anything in q0 1ms
+	//"" q1 (else)
+	//"" q2 (else)
+
+
 }
