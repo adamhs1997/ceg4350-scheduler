@@ -20,7 +20,7 @@ private:
 	int* m_processArray;
 	int m_numProcesses;
 	int m_currentExecutionTime;
-	bool checkCompletion(const int&, int&, int&);
+	bool checkCompletion(const int&, int&, int&, int&);
 
 public:
 	MLFQ(int* processInfo, int numProcesses);
@@ -47,7 +47,7 @@ void MLFQ::schedule() {
 	int arrayIndex = 1;
 
 	//Track time process spent in RR each queue
-	int timeInQ0 = 0, timeInQ1 = 0;
+	int timeInQ0 = 0, timeInQ1 = 0, timeInQ2 = 0;;
 
 	//Track processes that have been completed
 	int numberProcessesComplete = 0;
@@ -66,7 +66,7 @@ void MLFQ::schedule() {
 		}
 
 		//Check if any process has finished
-		if (checkCompletion(clock, timeInQ0, timeInQ1))
+		if (checkCompletion(clock, timeInQ0, timeInQ1, timeInQ2))
 			numberProcessesComplete++;
 
 		//See if need to preempt q0 to q1
@@ -107,8 +107,11 @@ void MLFQ::schedule() {
 
 		//Otherwise, we run FCFS
 		else if (!m_p2Queue.empty()) {
-			//TODO: figure out how to print sthg for first time here
+			if (timeInQ2 == 0)
+				cout << "PID " << m_p2Queue.front().getPid()
+					<< " continues running at time " << clock << " ms\n";
 			m_p2Queue.front().setTimeRemaining(m_p2Queue.front().getTimeRemaining() - 1);
+			timeInQ2 = 0;
 		}
 
 		//Run the clock
@@ -119,7 +122,7 @@ void MLFQ::schedule() {
 }
 
 //Use to see if any process finished on last cycle
-bool MLFQ::checkCompletion(const int& clock, int& timeInQ0, int&timeInQ1) {
+bool MLFQ::checkCompletion(const int& clock, int& timeInQ0, int&timeInQ1, int& timeInQ2) {
 	queue<Process>* queues[] = { &m_p0Queue, &m_p1Queue, &m_p2Queue };
 
 	//Loop across each queue, look for heads that are complete
@@ -131,6 +134,7 @@ bool MLFQ::checkCompletion(const int& clock, int& timeInQ0, int&timeInQ1) {
 			//Reset queue timers
 			timeInQ0 = 0;
 			timeInQ1 = 0;
+			timeInQ2 = 0;
 			//Return true if something is done
 			return true;
 		}
