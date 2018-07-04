@@ -20,7 +20,9 @@ private:
 	int* m_processArray;
 	int m_numProcesses;
 	int m_currentExecutionTime;
+	int m_lastRunQueue;
 	bool checkCompletion(const int&, int&, int&, int&);
+	void checkPreemption(int, int&, int&);
 
 public:
 	MLFQ(int* processInfo, int numProcesses);
@@ -32,6 +34,7 @@ MLFQ::MLFQ(int* processInfo, int numProcesses) {
 	m_processArray = processInfo;
 	m_numProcesses = numProcesses;
 	m_currentExecutionTime = 0;
+	m_lastRunQueue = 0;
 }
 
 //Main MLFQ scheduler, only public function
@@ -69,6 +72,9 @@ void MLFQ::schedule() {
 		if (checkCompletion(clock, timeInQ0, timeInQ1, timeInQ2))
 			numberProcessesComplete++;
 
+		//Check to see if new process will preempt current process
+		checkPreemption(clock, timeInQ1, timeInQ2);
+
 		//See if need to preempt q0 to q1
 		if (timeInQ0 == 8) {
 			cout << "PID " << m_p0Queue.front().getPid()
@@ -94,6 +100,7 @@ void MLFQ::schedule() {
 					<< " starts running at time " << clock << " ms\n";
 			m_p0Queue.front().setTimeRemaining(m_p0Queue.front().getTimeRemaining() - 1);
 			timeInQ0++;
+			m_lastRunQueue = 0;
 		}
 
 		//See if anything in q1 to run
@@ -103,6 +110,7 @@ void MLFQ::schedule() {
 					<< " continues running at time " << clock << " ms\n";
 			m_p1Queue.front().setTimeRemaining(m_p1Queue.front().getTimeRemaining() - 1);
 			timeInQ1++;
+			m_lastRunQueue = 1;
 		}
 
 		//Otherwise, we run FCFS
@@ -111,7 +119,8 @@ void MLFQ::schedule() {
 				cout << "PID " << m_p2Queue.front().getPid()
 					<< " continues running at time " << clock << " ms\n";
 			m_p2Queue.front().setTimeRemaining(m_p2Queue.front().getTimeRemaining() - 1);
-			timeInQ2 = 0;
+			timeInQ2++;
+			m_lastRunQueue = 2;
 		}
 
 		//Run the clock
@@ -142,4 +151,40 @@ bool MLFQ::checkCompletion(const int& clock, int& timeInQ0, int&timeInQ1, int& t
 
 	//False if nothing removed
 	return false;
+}
+
+//Use to see if a higher-priority process preempts current process
+void MLFQ::checkPreemption(int clock, int& timeInQueue1, int& timeInQueue2) {
+	//If we were running in q1 and sthg in q0, put it back to start
+	if (m_lastRunQueue == 1 && !m_p0Queue.empty()) {
+		//Print message to tell user process preempted
+		cout << "PID " << m_p1Queue.front().getPid()
+			<< " was preempted back into Queue 1 at time " << clock << " ms";
+		m_p1Queue.push(m_p1Queue.front());
+		m_p1Queue.pop();
+		//Reset queue timer
+		timeInQueue1 = 0;
+	}
+
+	//If we were running in q2 and sthg in q0, put it back to start
+	if (m_lastRunQueue == 2 && !m_p0Queue.empty()) {
+		//Print message to tell user process preempted
+		cout << "PID " << m_p2Queue.front().getPid()
+			<< " was preempted back into Queue 2 at time " << clock << " ms";
+		m_p2Queue.push(m_p2Queue.front());
+		m_p2Queue.pop();
+		//Reset queue timer
+		timeInQueue2 = 0;
+	}
+
+	//If we were running in q2 and sthg in q1, put it back to start
+	if (m_lastRunQueue == 2 && !m_p1Queue.empty()) {
+		//Print message to tell user process preempted
+		cout << "PID " << m_p2Queue.front().getPid()
+			<< " was preempted back into Queue 2 at time " << clock << " ms";
+		m_p2Queue.push(m_p2Queue.front());
+		m_p2Queue.pop();
+		//Reset queue timer
+		timeInQueue2 = 0;
+	}
 }
