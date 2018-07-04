@@ -20,7 +20,7 @@ private:
 	int* m_processArray;
 	int m_numProcesses;
 	int m_currentExecutionTime;
-	void checkCompletion();
+	bool checkCompletion(const int&, int&, int&);
 
 public:
 	MLFQ(int* processInfo, int numProcesses);
@@ -38,13 +38,6 @@ MLFQ::MLFQ(int* processInfo, int numProcesses) {
 void MLFQ::schedule() {
 	//CanNOT really rely on other RR and FCFS, as these work in batch
 	//This will be new batch scheduler, relying on parallel RR/FCFS implementation
-
-	//Start running a clock
-	//See if new processes have arrived
-	//Add any new process to q0
-	//Run anything in q0 1ms
-	//"" q1 (else)
-	//"" q2 (else)
 
 	//Create a dummy clock variable
 	int clock = 0;
@@ -73,7 +66,8 @@ void MLFQ::schedule() {
 		}
 
 		//Check if any process has finished
-		checkCompletion();
+		if (checkCompletion(clock, timeInQ0, timeInQ1))
+			numberProcessesComplete++;
 
 		//See if need to preempt q0 to q1
 		if (timeInQ0 == 8) {
@@ -86,7 +80,7 @@ void MLFQ::schedule() {
 
 		//See if need to preempt q1 to q2
 		if (timeInQ1 == 16) {
-			cout << "PID " << m_p0Queue.front().getPid()
+			cout << "PID " << m_p1Queue.front().getPid()
 				<< " is preempted into Queue 2 at time " << clock << " ms\n";
 			m_p2Queue.push(m_p1Queue.front());
 			m_p1Queue.pop();
@@ -112,28 +106,36 @@ void MLFQ::schedule() {
 		}
 
 		//Otherwise, we run FCFS
-		else {
+		else if (!m_p2Queue.empty()) {
 			//TODO: figure out how to print sthg for first time here
 			m_p2Queue.front().setTimeRemaining(m_p2Queue.front().getTimeRemaining() - 1);
 		}
 
 		//Run the clock
 		clock++;
-		this_thread::sleep_for(chrono::seconds(1));
+		this_thread::sleep_for(chrono::milliseconds(1));
 	}
 
 }
 
 //Use to see if any process finished on last cycle
-void MLFQ::checkCompletion() {
-	queue<Process> queues[] = { m_p0Queue, m_p1Queue, m_p2Queue };
+bool MLFQ::checkCompletion(const int& clock, int& timeInQ0, int&timeInQ1) {
+	queue<Process>* queues[] = { &m_p0Queue, &m_p1Queue, &m_p2Queue };
 
 	//Loop across each queue, look for heads that are complete
 	for (auto queue : queues) {
-		if (queue.front().getTimeRemaining() == 0) {
-			cout << "PID " << queue.front().getPid()
+		if (!queue->empty() && queue->front().getTimeRemaining() == 0) {
+			cout << "PID " << queue->front().getPid()
 				<< " has finished at time " << clock << " ms\n";
-			queue.pop();
+			queue->pop();
+			//Reset queue timers
+			timeInQ0 = 0;
+			timeInQ1 = 0;
+			//Return true if something is done
+			return true;
 		}
 	}
+
+	//False if nothing removed
+	return false;
 }
