@@ -5,8 +5,6 @@ Dr. Yong Pei
 Project 1
 */
 
-#include "stdafx.h"
-
 //Driver program for the scheduler simulation
 
 #include "FileHandler.h"
