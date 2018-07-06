@@ -78,11 +78,11 @@ void FCFS::schedule() {
 				<< clock << " ms\n";
 			//Note time we finish the process
 			current.setCompletionTime(clock);
+			//Officially kill the process by putting in terminated vector
+			m_completedProcesses.push_back(current);
+			m_readyQueue.pop();
 			//Replace current with dummy
 			current = Process(-1, 0, -1);
-			//Officially kill the process by putting in terminated vector
-			m_completedProcesses.push_back(m_readyQueue.front());
-			m_readyQueue.pop();
 			//Count up the processes we've finished
 			numberProcessesComplete++;
 		}

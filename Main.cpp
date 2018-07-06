@@ -31,24 +31,30 @@ int main(int argc, char** argv) {
 	cout << "\nFCFS:\n";
 	FCFS fcfs_scheduler(arr, numberProcesses);
 	fcfs_scheduler.schedule();
+	cout << "Average turnaround time: " <<
+		fcfs_scheduler.getTurnaroundTime() << " ms\n";
 
 	//Test RR algo
 	cout << "RR:\n";
 	RR rr_scheduler(arr, numberProcesses, 8);
 	rr_scheduler.schedule();
+	cout << "Average turnaround time: " <<
+		rr_scheduler.getTurnaroundTime() << " ms\n";
 
 	//Test MLFQ
 	cout << "MLFQ:\n";
 	MLFQ mlfq_scheduler(arr, numberProcesses);
 	mlfq_scheduler.schedule();
+	cout << "Average turnaround time: " <<
+		mlfq_scheduler.getTurnaroundTime() << " ms\n";
 
 	//Test code for process class...
 	cout << "\n";
-	Process testProcess(1, 3);
-	cout << testProcess.getTimeRemaining() << "\n";
-	cout << testProcess.getBurstTime() << "\n";
-	cout << testProcess.hasArrived() << "\n";
-	cout << testProcess.getPid() << "\n";
+	//Process testProcess(1, 3);
+	//cout << testProcess.getTimeRemaining() << "\n";
+	//cout << testProcess.getBurstTime() << "\n";
+	//cout << testProcess.hasArrived() << "\n";
+	//cout << testProcess.getPid() << "\n";
 
 	return 0;
 }

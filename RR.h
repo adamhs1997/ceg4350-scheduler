@@ -9,6 +9,7 @@ Simply add extra counter up to (time quantum)
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <vector>
 
 using namespace std;
 
@@ -18,10 +19,12 @@ private:
 	int* m_processArray;
 	int m_numProcesses;
 	int m_quantum;
+	vector<Process> m_completedProcesses;
 
 public:
 	RR(int* processInfo, int numProcesses, int quantum);
 	void schedule();
+	double getTurnaroundTime();
 
 };
 
@@ -62,18 +65,25 @@ void RR::schedule() {
 			Process newProcess(m_processArray[arrayIndex - 1],
 				m_processArray[arrayIndex + 1], m_processArray[arrayIndex]);
 			m_readyQueue.push(newProcess);
-
+			
 			//Increment the array index to next process arrive time
 			arrayIndex += 3;
 		}
 
 		//See if we've finished any process that is running
 		if (current.getPid() != -1 && burstTimeRemaining == 0) {
+			//Wrap up the process
 			current.setState(current.TERMINATED);
 			cout << "PID " << current.getPid() << " has finished at time "
 				<< clock << " ms\n";
+			//Note when we finish
+			current.setCompletionTime(clock);
+			//Officially kill process by putting in terminated vector
+			m_completedProcesses.push_back(current);
+			//Replace current with dummy
 			current = Process(-1, 0, -1);
-			currentRunTime = 0; //Be kind, rewind
+			//Be kind, rewind
+			currentRunTime = 0;
 			//Count up the processes we've finished
 			numberProcessesComplete++;
 		}
@@ -107,4 +117,14 @@ void RR::schedule() {
 	}
 }
 
+//Returns turnaround time
+double RR::getTurnaroundTime() {
+	int sumOfTurnarounds = 0;
+	for (Process p : m_completedProcesses) {
+		int arriveTime = p.getArriveTime();
+		int completionTime = p.getCompletionTime();
+		sumOfTurnarounds += completionTime - arriveTime;
+	}
 
+	return sumOfTurnarounds / static_cast<double>(m_numProcesses);
+}

@@ -9,6 +9,7 @@ If pre-empted, priority remains same-->go to end of queue though
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <vector>
 
 using namespace std;
 
@@ -21,12 +22,14 @@ private:
 	int m_numProcesses;
 	int m_currentExecutionTime;
 	int m_lastRunQueue;
+	vector<Process> m_completedProcesses;
 	bool checkCompletion(const int&, int&, int&, int&);
 	void checkPreemption(int, int&, int&);
 
 public:
 	MLFQ(int* processInfo, int numProcesses);
 	void schedule();
+	double getTurnaroundTime();
 
 };
 
@@ -137,13 +140,22 @@ bool MLFQ::checkCompletion(const int& clock, int& timeInQ0, int&timeInQ1, int& t
 	//Loop across each queue, look for heads that are complete
 	for (auto queue : queues) {
 		if (!queue->empty() && queue->front().getTimeRemaining() == 0) {
+			//Note completion time
+			queue->front().setCompletionTime(clock);
 			cout << "PID " << queue->front().getPid()
 				<< " has finished at time " << clock << " ms\n";
+
+			//Push completed process into completed list
+			m_completedProcesses.push_back(queue->front());
+
+			//Get completed process out of queue
 			queue->pop();
+
 			//Reset queue timers
 			timeInQ0 = 0;
 			timeInQ1 = 0;
 			timeInQ2 = 0;
+
 			//Return true if something is done
 			return true;
 		}
@@ -187,4 +199,16 @@ void MLFQ::checkPreemption(int clock, int& timeInQueue1, int& timeInQueue2) {
 		//Reset queue timer
 		timeInQueue2 = 0;
 	}
+}
+
+//Returns turnaround time
+double MLFQ::getTurnaroundTime() {
+	int sumOfTurnarounds = 0;
+	for (Process p : m_completedProcesses) {
+		int arriveTime = p.getArriveTime();
+		int completionTime = p.getCompletionTime();
+		sumOfTurnarounds += completionTime - arriveTime;
+	}
+
+	return sumOfTurnarounds / static_cast<double>(m_numProcesses);
 }
