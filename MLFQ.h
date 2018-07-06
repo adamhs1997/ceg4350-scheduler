@@ -61,7 +61,7 @@ void MLFQ::schedule() {
 		if (clock == m_processArray[arrayIndex]) {
 			//If it has, add it to queue 0 (highest priority)
 			Process newProcess(m_processArray[arrayIndex - 1],
-				m_processArray[arrayIndex + 1]);
+				m_processArray[arrayIndex + 1], m_processArray[arrayIndex]);
 			m_p0Queue.push(newProcess);
 
 			//Increment the array index to next process arrive time

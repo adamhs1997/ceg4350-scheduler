@@ -52,7 +52,7 @@ void RR::schedule() {
 
 	//Track our currently running process
 	//Initialize to "null" process with pid -1
-	Process current(-1, 0);
+	Process current(-1, 0, -1);
 
 	//Run the scheduler in a loop until we are out of processes to schedule
 	while (numberProcessesComplete != m_numProcesses) {
@@ -60,7 +60,7 @@ void RR::schedule() {
 		if (clock == m_processArray[arrayIndex]) {
 			//If it has, add it to ready queue
 			Process newProcess(m_processArray[arrayIndex - 1],
-				m_processArray[arrayIndex + 1]);
+				m_processArray[arrayIndex + 1], m_processArray[arrayIndex]);
 			m_readyQueue.push(newProcess);
 
 			//Increment the array index to next process arrive time
@@ -72,7 +72,7 @@ void RR::schedule() {
 			current.setState(current.TERMINATED);
 			cout << "PID " << current.getPid() << " has finished at time "
 				<< clock << " ms\n";
-			current = Process(-1, 0);
+			current = Process(-1, 0, -1);
 			currentRunTime = 0; //Be kind, rewind
 			//Count up the processes we've finished
 			numberProcessesComplete++;
@@ -86,7 +86,7 @@ void RR::schedule() {
 			current.setTimeRemaining(current.getTimeRemaining() - m_quantum);
 			m_readyQueue.push(current);
 			currentRunTime = 0; //Reset for next process
-			current = Process(-1, 0);
+			current = Process(-1, 0, -1);
 		}
 
 		//Get us a new process if nothing else going on
