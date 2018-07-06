@@ -16,12 +16,9 @@ Probably could create processes on the fly
 
 
 class Process {
-private:
-	int m_burstTime, m_pid, m_timeRemaining;
-	bool m_hasArrived;
 
 public:
-	Process(int pid, int burstTime);
+	Process(int pid, int burstTime, int arrivalTime);
 	enum ProcessState{READY, RUNNING, TERMINATED};
 	const int& getTimeRemaining();
 	const int& getBurstTime();
@@ -30,18 +27,23 @@ public:
 	void setTimeRemaining(int newTime);
 	void setHasArrived();
 	void setState(Process::ProcessState state);
+	void setCompletionTime(int arrivalTime);
+	const int& getCompletionTime();
 	Process::ProcessState getState();
 
 private:
+	int m_burstTime, m_pid, m_timeRemaining;
+	int m_completionTime;
+	int m_arrivalTime;
 	Process::ProcessState m_state;
 
 };
 
-Process::Process(int pid, int burstTime) {
+Process::Process(int pid, int burstTime, int arrivalTime) {
 	m_pid = pid;
 	m_burstTime = burstTime;
 	m_timeRemaining = burstTime;
-	m_hasArrived = false;
+	m_arrivalTime = arrivalTime;
 	m_state = ProcessState::READY;
 }
 
@@ -53,24 +55,24 @@ const int & Process::getBurstTime() {
 	return m_burstTime;
 }
 
-bool Process::hasArrived() {
-	return m_hasArrived;
-}
-
 const int & Process::getPid() {
 	return m_pid;
+}
+
+const int& Process::getCompletionTime() {
+	return m_completionTime;
 }
 
 void Process::setTimeRemaining(int newTime) {
 	m_timeRemaining = newTime;
 }
 
-void Process::setHasArrived() {
-	m_hasArrived = true;
-}
-
 void Process::setState(Process::ProcessState state) {
 	m_state = state;
+}
+
+void Process::setCompletionTime(int arrivalTime) {
+	m_completionTime = arrivalTime;
 }
 
 Process::ProcessState Process::getState() {
