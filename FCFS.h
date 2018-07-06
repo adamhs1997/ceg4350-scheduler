@@ -13,6 +13,7 @@ Pick up and finish next process
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <vector>
 
 using namespace std;
 
@@ -21,10 +22,12 @@ private:
 	queue<Process> m_readyQueue;
 	int* m_processArray;
 	int m_numProcesses;
+	vector<Process> m_completedProcesses;
 
 public:
 	FCFS(int* processInfo, int numProcesses); // Array is to make all necc processes
 	void schedule();
+	double getTurnaroundTime();
 		
 };
 
@@ -51,7 +54,7 @@ void FCFS::schedule() {
 
 	//Track our currently running process
 	//Initialize to "null" process with pid -1
-	Process current(-1, 0);
+	Process current(-1, 0, -1);
 
 	//Run the scheduler in a loop until we are out of processes
 	//to schedule
@@ -60,7 +63,7 @@ void FCFS::schedule() {
 		if (clock == m_processArray[arrayIndex]) {
 			//If it has, add it to ready queue
 			Process newProcess(m_processArray[arrayIndex - 1],
-				m_processArray[arrayIndex + 1]);
+				m_processArray[arrayIndex + 1], m_processArray[arrayIndex]);
 			m_readyQueue.push(newProcess);
 
 			//Increment the array index to next process arrive time
@@ -69,11 +72,16 @@ void FCFS::schedule() {
 
 		//See if we've finished any process that is running
 		if (current.getPid() != -1 && burstTimeRemaining == 0) {
+			//Wrap up the process
 			current.setState(current.TERMINATED);
 			cout << "PID " << current.getPid() << " has finished at time "
 				<< clock << " ms\n";
-			current = Process(-1, 0);
-			//Officially kill the process by popping from queue
+			//Note time we finish the process
+			current.setCompletionTime(clock);
+			//Replace current with dummy
+			current = Process(-1, 0, -1);
+			//Officially kill the process by putting in terminated vector
+			m_completedProcesses.push_back(m_readyQueue.front());
 			m_readyQueue.pop();
 			//Count up the processes we've finished
 			numberProcessesComplete++;
@@ -95,3 +103,14 @@ void FCFS::schedule() {
 	}
 }
 
+//Returns turnaround time
+double FCFS::getTurnaroundTime() {
+	int sumOfTurnarounds = 0;
+	for (Process p : m_completedProcesses) {
+		int arriveTime = p.getArriveTime();
+		int completionTime = p.getCompletionTime();
+		sumOfTurnarounds += completionTime - arriveTime;
+	}
+
+	return sumOfTurnarounds / static_cast<double>(m_numProcesses);
+}
