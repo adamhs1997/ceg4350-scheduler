@@ -29,6 +29,7 @@ public:
 	void setState(Process::ProcessState state);
 	void setCompletionTime(int arrivalTime);
 	const int& getCompletionTime();
+	const int& getArriveTime();
 	Process::ProcessState getState();
 
 private:
@@ -61,6 +62,10 @@ const int & Process::getPid() {
 
 const int& Process::getCompletionTime() {
 	return m_completionTime;
+}
+
+const int& Process::getArriveTime() {
+	return m_arrivalTime;
 }
 
 void Process::setTimeRemaining(int newTime) {
