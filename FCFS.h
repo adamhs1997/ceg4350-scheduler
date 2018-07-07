@@ -28,6 +28,8 @@ public:
 	FCFS(int* processInfo, int numProcesses); // Array is to make all necc processes
 	void schedule();
 	double getTurnaroundTime();
+	double getResponseTime();
+	double getWaitingTime();
 		
 };
 
@@ -113,4 +115,18 @@ double FCFS::getTurnaroundTime() {
 	}
 
 	return sumOfTurnarounds / static_cast<double>(m_numProcesses);
+}
+
+//Returns average response time
+double FCFS::getResponseTime() {
+	int sumBurstTime = 0;
+	for (Process p : m_completedProcesses)
+		sumBurstTime += p.getBurstTime();
+
+	return sumBurstTime / static_cast<double>(m_numProcesses);
+}
+
+//Return average waiting time
+double FCFS::getWaitingTime() {
+	return getTurnaroundTime() - getResponseTime();
 }
