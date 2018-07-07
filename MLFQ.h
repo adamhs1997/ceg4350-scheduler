@@ -30,6 +30,8 @@ public:
 	MLFQ(int* processInfo, int numProcesses);
 	void schedule();
 	double getTurnaroundTime();
+	double getResponseTime();
+	double getWaitingTime();
 
 };
 
@@ -211,4 +213,18 @@ double MLFQ::getTurnaroundTime() {
 	}
 
 	return sumOfTurnarounds / static_cast<double>(m_numProcesses);
+}
+
+//Returns average response time
+double MLFQ::getResponseTime() {
+	int sumBurstTime = 0;
+	for (Process p : m_completedProcesses)
+		sumBurstTime += p.getBurstTime();
+
+	return sumBurstTime / static_cast<double>(m_numProcesses);
+}
+
+//Return average waiting time
+double MLFQ::getWaitingTime() {
+	return getTurnaroundTime() - getResponseTime();
 }

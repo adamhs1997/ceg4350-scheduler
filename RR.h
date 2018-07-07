@@ -25,6 +25,8 @@ public:
 	RR(int* processInfo, int numProcesses, int quantum);
 	void schedule();
 	double getTurnaroundTime();
+	double getResponseTime();
+	double getWaitingTime();
 
 };
 
@@ -127,4 +129,18 @@ double RR::getTurnaroundTime() {
 	}
 
 	return sumOfTurnarounds / static_cast<double>(m_numProcesses);
+}
+
+//Returns average response time
+double RR::getResponseTime() {
+	int sumBurstTime = 0;
+	for (Process p : m_completedProcesses)
+		sumBurstTime += p.getBurstTime();
+
+	return sumBurstTime / static_cast<double>(m_numProcesses);
+}
+
+//Return average waiting time
+double RR::getWaitingTime() {
+	return getTurnaroundTime() - getResponseTime();
 }
