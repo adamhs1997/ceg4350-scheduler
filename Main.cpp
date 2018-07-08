@@ -6,6 +6,7 @@ Project 1
 */
 
 //Driver program for the scheduler simulation
+//NOTE: See README for complete usage details
 
 #include "FileHandler.h"
 #include "Process.h"
@@ -13,11 +14,15 @@ Project 1
 #include "RR.h"
 #include "MLFQ.h"
 
+//Forward declaration for test function below
+//Use this to test each algorithm without command line args
+void test();
+
 int main(int argc, char** argv) {
 	//Read data from the input file
 	//TODO: Change this from the hard-set processes file to the cmd arg
 	FileHandler mfh;
-	int* arr = mfh.parseData("mlfq_ex_processes.txt");
+	int* arr = mfh.parseData("longer_processes.txt");
 	int numberProcesses = mfh.getNumberProcesses();
     	cout << "# processes " << mfh.getNumberProcesses() << "\n";
 	for (int i = 0; i < mfh.getNumberProcesses() * 3; i++) {
@@ -33,10 +38,12 @@ int main(int argc, char** argv) {
 	fcfs_scheduler.schedule();
 	cout << "Average turnaround time: " <<
 		fcfs_scheduler.getTurnaroundTime() << " ms\n";
-	cout << "Average response time: " <<
-		fcfs_scheduler.getResponseTime() << " ms\n";
+	cout << "Average execution time: " <<
+		fcfs_scheduler.getExecutionTime() << " ms\n";
 	cout << "Average waiting time: " <<
 		fcfs_scheduler.getWaitingTime() << " ms\n";
+	cout << "Average response time: " <<
+		fcfs_scheduler.getResponseTime() << " ms\n";
 
 	//Test RR algo
 	cout << "RR:\n";
@@ -44,6 +51,8 @@ int main(int argc, char** argv) {
 	rr_scheduler.schedule();
 	cout << "Average turnaround time: " <<
 		rr_scheduler.getTurnaroundTime() << " ms\n";
+	cout << "Average execution time: " <<
+		rr_scheduler.getExecutionTime() << " ms\n";
 	cout << "Average response time: " <<
 		rr_scheduler.getResponseTime() << " ms\n";
 	cout << "Average waiting time: " <<
@@ -55,6 +64,8 @@ int main(int argc, char** argv) {
 	mlfq_scheduler.schedule();
 	cout << "Average turnaround time: " <<
 		mlfq_scheduler.getTurnaroundTime() << " ms\n";
+	cout << "Average execution time: " <<
+		mlfq_scheduler.getExecutionTime() << " ms\n";
 	cout << "Average response time: " <<
 		mlfq_scheduler.getResponseTime() << " ms\n";
 	cout << "Average waiting time: " <<
@@ -69,4 +80,8 @@ int main(int argc, char** argv) {
 	//cout << testProcess.getPid() << "\n";
 
 	return 0;
+}
+
+void test() {
+
 }
