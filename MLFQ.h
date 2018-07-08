@@ -1,8 +1,4 @@
-/*
-This will simply utilize existing RR and FCFS algos
-During each clock cycle, must check if sthg in higher level queue
-If pre-empted, priority remains same-->go to end of queue though
-*/
+//Implementation for the MLFQ scheduler class
 
 #include "Process.h"
 #include <queue>
@@ -173,7 +169,7 @@ void MLFQ::checkPreemption(int clock, int& timeInQueue1, int& timeInQueue2) {
 	if (m_lastRunQueue == 1 && !m_p0Queue.empty()) {
 		//Print message to tell user process preempted
 		cout << "PID " << m_p1Queue.front().getPid()
-			<< " was preempted back into Queue 1 at time " << clock << " ms";
+			<< " was preempted back into Queue 1 at time " << clock << " ms\n";
 		m_p1Queue.push(m_p1Queue.front());
 		m_p1Queue.pop();
 		//Reset queue timer
@@ -184,7 +180,7 @@ void MLFQ::checkPreemption(int clock, int& timeInQueue1, int& timeInQueue2) {
 	if (m_lastRunQueue == 2 && !m_p0Queue.empty()) {
 		//Print message to tell user process preempted
 		cout << "PID " << m_p2Queue.front().getPid()
-			<< " was preempted back into Queue 2 at time " << clock << " ms";
+			<< " was preempted back into Queue 2 at time " << clock << " ms\n";
 		m_p2Queue.push(m_p2Queue.front());
 		m_p2Queue.pop();
 		//Reset queue timer
@@ -195,7 +191,7 @@ void MLFQ::checkPreemption(int clock, int& timeInQueue1, int& timeInQueue2) {
 	if (m_lastRunQueue == 2 && !m_p1Queue.empty()) {
 		//Print message to tell user process preempted
 		cout << "PID " << m_p2Queue.front().getPid()
-			<< " was preempted back into Queue 2 at time " << clock << " ms";
+			<< " was preempted back into Queue 2 at time " << clock << " ms\n";
 		m_p2Queue.push(m_p2Queue.front());
 		m_p2Queue.pop();
 		//Reset queue timer

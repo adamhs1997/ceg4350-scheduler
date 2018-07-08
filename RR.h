@@ -1,8 +1,4 @@
-/*
-RR algo:
-Start up the algo as done in FCFS
-Simply add extra counter up to (time quantum)
-*/
+//Implementation of the RR scheduling algorithm
 
 #include "Process.h"
 #include <queue>
@@ -14,6 +10,7 @@ Simply add extra counter up to (time quantum)
 using namespace std;
 
 class RR {
+
 private:
 	queue<Process> m_readyQueue;
 	int* m_processArray;
