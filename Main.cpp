@@ -35,6 +35,7 @@ int main(int argc, char** argv) {
 	//Get data from the input file
 	FileHandler fh;
 	int* processData = fh.parseData(argv[1]);
+	int numberProcesses = fh.getNumberProcesses();
 
 	//If file doesn't exist, return an error
 	if (!processData) return 2;
@@ -43,11 +44,60 @@ int main(int argc, char** argv) {
 	string choice = argv[2];
 	for (size_t i = 0; i < choice.length(); i++)
 		choice[i] = tolower(choice[i]);
-	cout << choice;
+	
+	//Invoke user's chosen algorithm
+	if (choice == "fcfs") {
+		//Run scheduler
+		FCFS fcfs_scheduler(processData, numberProcesses);
+		fcfs_scheduler.schedule();
 
-	cout << "# processes " << fh.getNumberProcesses() << "\n";
-	for (int i = 0; i < fh.getNumberProcesses() * 3; i++) {
-		cout << processData[i] << " ";
+		//Pretty print statistics
+		cout << "============================================\n";
+		cout << "Average waiting time: " <<
+			fcfs_scheduler.getWaitingTime() << " ms\n";
+		cout << "Average response time: " <<
+			fcfs_scheduler.getResponseTime() << " ms\n";
+		cout << "Average turnaround time: " <<
+			fcfs_scheduler.getTurnaroundTime() << " ms\n";
+		cout << "============================================\n";
+	}
+
+	else if (choice == "rr") {
+		//Run scheduler
+		RR rr_scheduler(processData, numberProcesses, 8);
+		rr_scheduler.schedule();
+
+		//Pretty print statistics
+		cout << "============================================\n";
+		cout << "Average waiting time: " <<
+			rr_scheduler.getWaitingTime() << " ms\n";
+		cout << "Average response time: " <<
+			rr_scheduler.getResponseTime() << " ms\n";
+		cout << "Average turnaround time: " <<
+			rr_scheduler.getTurnaroundTime() << " ms\n";
+		cout << "============================================\n";
+	}
+
+	else if (choice == "mlfq") {
+		//Run scheduler
+		MLFQ mlfq_scheduler(processData, numberProcesses);
+		mlfq_scheduler.schedule();
+
+		//Pretty print statistics
+		cout << "============================================\n";
+		cout << "Average waiting time: " <<
+			mlfq_scheduler.getWaitingTime() << " ms\n";
+		cout << "Average response time: " <<
+			mlfq_scheduler.getResponseTime() << " ms\n";
+		cout << "Average turnaround time: " <<
+			mlfq_scheduler.getTurnaroundTime() << " ms\n";
+		cout << "============================================\n";
+	}
+
+	else {
+		//Only get here if invalid scheduler chosen
+		cout << "Invalid scheduler choice! Usage:\n";
+		cout << "\tschedulesim <input_file_name> <[FCFS | RR | MLFQ]>\n";
 	}
 
 	return 0;
