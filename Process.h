@@ -16,14 +16,17 @@ public:
 	void setHasArrived();
 	void setState(Process::ProcessState state);
 	void setCompletionTime(int arrivalTime);
+	void setInitialRunTime(int initialRunTime);
 	const int& getCompletionTime();
 	const int& getArriveTime();
+	const int& getInitialRunTime();
 	Process::ProcessState getState();
 
 private:
 	int m_burstTime, m_pid, m_timeRemaining;
 	int m_completionTime;
 	int m_arrivalTime;
+	int m_initialRunTime;
 	Process::ProcessState m_state;
 
 };
@@ -36,15 +39,15 @@ Process::Process(int pid, int burstTime, int arrivalTime) {
 	m_state = ProcessState::READY;
 }
 
-const int & Process::getTimeRemaining() {
+const int& Process::getTimeRemaining() {
 	return m_timeRemaining;
 }
 
-const int & Process::getBurstTime() {
+const int& Process::getBurstTime() {
 	return m_burstTime;
 }
 
-const int & Process::getPid() {
+const int& Process::getPid() {
 	return m_pid;
 }
 
@@ -54,6 +57,10 @@ const int& Process::getCompletionTime() {
 
 const int& Process::getArriveTime() {
 	return m_arrivalTime;
+}
+
+const int& Process::getInitialRunTime() {
+	return m_initialRunTime;
 }
 
 void Process::setTimeRemaining(int newTime) {
@@ -66,6 +73,10 @@ void Process::setState(Process::ProcessState state) {
 
 void Process::setCompletionTime(int arrivalTime) {
 	m_completionTime = arrivalTime;
+}
+
+void Process::setInitialRunTime(int initialRunTime) {
+	m_initialRunTime = initialRunTime;
 }
 
 Process::ProcessState Process::getState() {
