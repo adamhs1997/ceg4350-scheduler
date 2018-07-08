@@ -37,6 +37,7 @@ Process::Process(int pid, int burstTime, int arrivalTime) {
 	m_burstTime = burstTime;
 	m_timeRemaining = burstTime;
 	m_arrivalTime = arrivalTime;
+	m_hasRun = false;
 	m_state = ProcessState::READY;
 }
 
