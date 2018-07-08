@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
 	//Read data from the input file
 	//TODO: Change this from the hard-set processes file to the cmd arg
 	FileHandler mfh;
-	int* arr = mfh.parseData("longer_processes.txt");
+	int* arr = mfh.parseData("mlfq_ex_processes.txt");
 	int numberProcesses = mfh.getNumberProcesses();
     	cout << "# processes " << mfh.getNumberProcesses() << "\n";
 	for (int i = 0; i < mfh.getNumberProcesses() * 3; i++) {
@@ -33,6 +33,10 @@ int main(int argc, char** argv) {
 	fcfs_scheduler.schedule();
 	cout << "Average turnaround time: " <<
 		fcfs_scheduler.getTurnaroundTime() << " ms\n";
+	cout << "Average response time: " <<
+		fcfs_scheduler.getResponseTime() << " ms\n";
+	cout << "Average waiting time: " <<
+		fcfs_scheduler.getWaitingTime() << " ms\n";
 
 	//Test RR algo
 	cout << "RR:\n";
@@ -40,6 +44,10 @@ int main(int argc, char** argv) {
 	rr_scheduler.schedule();
 	cout << "Average turnaround time: " <<
 		rr_scheduler.getTurnaroundTime() << " ms\n";
+	cout << "Average response time: " <<
+		rr_scheduler.getResponseTime() << " ms\n";
+	cout << "Average waiting time: " <<
+		rr_scheduler.getWaitingTime() << " ms\n";
 
 	//Test MLFQ
 	cout << "MLFQ:\n";
@@ -47,6 +55,10 @@ int main(int argc, char** argv) {
 	mlfq_scheduler.schedule();
 	cout << "Average turnaround time: " <<
 		mlfq_scheduler.getTurnaroundTime() << " ms\n";
+	cout << "Average response time: " <<
+		mlfq_scheduler.getResponseTime() << " ms\n";
+	cout << "Average waiting time: " <<
+		mlfq_scheduler.getWaitingTime() << " ms\n";
 
 	//Test code for process class...
 	cout << "\n";
