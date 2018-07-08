@@ -21,6 +21,10 @@ public:
 int* FileHandler::parseData(string filename) {
 	//Read each line from file, place in vector
 	ifstream openFile(filename);
+	if (!openFile) {
+		cout << "File name invalid! Aborting...\n";
+		return nullptr;
+	}
 	int nextNumber;
 	while (openFile) {
 		openFile >> nextNumber;
