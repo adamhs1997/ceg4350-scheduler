@@ -10,10 +10,10 @@ public:
 	enum ProcessState{READY, RUNNING, TERMINATED};
 	const int& getTimeRemaining();
 	const int& getBurstTime();
-	bool hasArrived();
+	const bool& hasRun();
 	const int& getPid();
 	void setTimeRemaining(int newTime);
-	void setHasArrived();
+	void setHasRun();
 	void setState(Process::ProcessState state);
 	void setCompletionTime(int arrivalTime);
 	void setInitialRunTime(int initialRunTime);
@@ -27,6 +27,7 @@ private:
 	int m_completionTime;
 	int m_arrivalTime;
 	int m_initialRunTime;
+	bool m_hasRun;
 	Process::ProcessState m_state;
 
 };
@@ -63,6 +64,10 @@ const int& Process::getInitialRunTime() {
 	return m_initialRunTime;
 }
 
+const bool& Process::hasRun() {
+	return m_hasRun;
+}
+
 void Process::setTimeRemaining(int newTime) {
 	m_timeRemaining = newTime;
 }
@@ -77,6 +82,10 @@ void Process::setCompletionTime(int arrivalTime) {
 
 void Process::setInitialRunTime(int initialRunTime) {
 	m_initialRunTime = initialRunTime;
+}
+
+void Process::setHasRun() {
+	m_hasRun = true;
 }
 
 Process::ProcessState Process::getState() {
