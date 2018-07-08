@@ -24,6 +24,7 @@ public:
 	double getTurnaroundTime();
 	double getResponseTime();
 	double getWaitingTime();
+	double getExecutionTime();
 
 };
 
@@ -106,6 +107,12 @@ void RR::schedule() {
 			burstTimeRemaining = current.getTimeRemaining();
 			cout << "PID " << current.getPid() << " starts running at time "
 				<< clock << " ms\n";
+
+			//Use to meter when process first runs (for response time)
+			if (!current.hasRun()) {
+				current.setHasRun();
+				current.setInitialRunTime(clock);
+			}
 		}
 
 		//Run the clock, update time remaining
@@ -128,8 +135,8 @@ double RR::getTurnaroundTime() {
 	return sumOfTurnarounds / static_cast<double>(m_numProcesses);
 }
 
-//Returns average response time
-double RR::getResponseTime() {
+//Returns average execution time
+double RR::getExecutionTime() {
 	int sumBurstTime = 0;
 	for (Process p : m_completedProcesses)
 		sumBurstTime += p.getBurstTime();
@@ -137,7 +144,16 @@ double RR::getResponseTime() {
 	return sumBurstTime / static_cast<double>(m_numProcesses);
 }
 
+//Returns average response time
+double RR::getResponseTime() {
+	int sumOfResponseTime = 0;
+	for (Process p : m_completedProcesses)
+		sumOfResponseTime += p.getInitialRunTime() - p.getArriveTime();
+
+	return sumOfResponseTime / static_cast<double>(m_numProcesses);
+}
+
 //Return average waiting time
 double RR::getWaitingTime() {
-	return getTurnaroundTime() - getResponseTime();
+	return getTurnaroundTime() - getExecutionTime();
 }

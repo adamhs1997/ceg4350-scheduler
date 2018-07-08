@@ -28,6 +28,7 @@ public:
 	double getTurnaroundTime();
 	double getResponseTime();
 	double getWaitingTime();
+	double getExecutionTime();
 
 };
 
@@ -102,6 +103,13 @@ void MLFQ::schedule() {
 			m_p0Queue.front().setTimeRemaining(m_p0Queue.front().getTimeRemaining() - 1);
 			timeInQ0++;
 			m_lastRunQueue = 0;
+
+			//Use to meter when process first runs (for response time)
+			//Note: All processes will first run in p0Queue
+			if (!m_p0Queue.front().hasRun()) {
+				m_p0Queue.front().setHasRun();
+				m_p0Queue.front().setInitialRunTime(clock);
+			}
 		}
 
 		//See if anything in q1 to run
@@ -213,6 +221,15 @@ double MLFQ::getTurnaroundTime() {
 
 //Returns average response time
 double MLFQ::getResponseTime() {
+	int sumOfResponseTime = 0;
+	for (Process p : m_completedProcesses)
+		sumOfResponseTime += p.getInitialRunTime() - p.getArriveTime();
+
+	return sumOfResponseTime / static_cast<double>(m_numProcesses);
+}
+
+//Returns average execution time
+double MLFQ::getExecutionTime() {
 	int sumBurstTime = 0;
 	for (Process p : m_completedProcesses)
 		sumBurstTime += p.getBurstTime();
@@ -222,5 +239,5 @@ double MLFQ::getResponseTime() {
 
 //Return average waiting time
 double MLFQ::getWaitingTime() {
-	return getTurnaroundTime() - getResponseTime();
+	return getTurnaroundTime() - getExecutionTime();
 }

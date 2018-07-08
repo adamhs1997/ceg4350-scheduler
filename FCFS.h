@@ -23,6 +23,7 @@ public:
 	double getTurnaroundTime();
 	double getResponseTime();
 	double getWaitingTime();
+	double getExecutionTime();
 		
 };
 
@@ -51,8 +52,7 @@ void FCFS::schedule() {
 	//Initialize to "null" process with pid -1
 	Process current(-1, 0, -1);
 
-	//Run the scheduler in a loop until we are out of processes
-	//to schedule
+	//Run the scheduler in a loop until we are out of processes to schedule
 	while (numberProcessesComplete != m_numProcesses) {
 		//Check to see if any process has arrived yet
 		if (clock == m_processArray[arrayIndex]) {
@@ -87,6 +87,7 @@ void FCFS::schedule() {
 			current.setState(current.RUNNING);
 			current = m_readyQueue.front();
 			burstTimeRemaining = current.getBurstTime();
+			current.setInitialRunTime(clock);
 			cout << "PID " << current.getPid() << " starts running at time "
 				<< clock << " ms\n";
 		}
@@ -110,8 +111,8 @@ double FCFS::getTurnaroundTime() {
 	return sumOfTurnarounds / static_cast<double>(m_numProcesses);
 }
 
-//Returns average response time
-double FCFS::getResponseTime() {
+//Returns average execution time for all processes
+double FCFS::getExecutionTime() {
 	int sumBurstTime = 0;
 	for (Process p : m_completedProcesses)
 		sumBurstTime += p.getBurstTime();
@@ -119,7 +120,16 @@ double FCFS::getResponseTime() {
 	return sumBurstTime / static_cast<double>(m_numProcesses);
 }
 
+//Returns average response time
+double FCFS::getResponseTime() {
+	int sumOfResponseTime = 0;
+	for (Process p : m_completedProcesses)
+		sumOfResponseTime += p.getInitialRunTime() - p.getArriveTime();
+
+	return sumOfResponseTime / static_cast<double>(m_numProcesses);
+}
+
 //Return average waiting time
 double FCFS::getWaitingTime() {
-	return getTurnaroundTime() - getResponseTime();
+	return getTurnaroundTime() - getExecutionTime();
 }
