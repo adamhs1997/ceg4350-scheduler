@@ -14,6 +14,8 @@ Project 1
 #include "RR.h"
 #include "MLFQ.h"
 
+#include <string>
+
 //Forward declaration for test function below
 //Use this to test each algorithm without command line args
 void test();
@@ -33,6 +35,16 @@ int main(int argc, char** argv) {
 	//Get data from the input file
 	FileHandler fh;
 	int* processData = fh.parseData(argv[1]);
+
+	//If file doesn't exist, return an error
+	if (!processData) return 2;
+
+	//Put user algorithm choice to lc to prevent confusion
+	string choice = argv[2];
+	for (size_t i = 0; i < choice.length(); i++)
+		choice[i] = tolower(choice[i]);
+	cout << choice;
+
 	cout << "# processes " << fh.getNumberProcesses() << "\n";
 	for (int i = 0; i < fh.getNumberProcesses() * 3; i++) {
 		cout << processData[i] << " ";
