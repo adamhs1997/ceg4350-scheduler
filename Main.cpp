@@ -19,18 +19,40 @@ Project 1
 void test();
 
 int main(int argc, char** argv) {
+
+	//Uncomment this to run test segment below
+	//test();
+
+	//Ensure proper number of args are passed
+	if (argc != 3) {
+		cout << "This program takes exactly two command line arguments. Usage:\n";
+		cout << "\tschedulesim <input_file_name> <[FCFS | RR | MLFQ]>\n";
+		return 1;
+	}
+
+
+	return 0;
+}
+
+void test() {
 	//Read data from the input file
-	//TODO: Change this from the hard-set processes file to the cmd arg
 	FileHandler mfh;
 	int* arr = mfh.parseData("longer_processes.txt");
 	int numberProcesses = mfh.getNumberProcesses();
-    	cout << "# processes " << mfh.getNumberProcesses() << "\n";
+	cout << "# processes " << mfh.getNumberProcesses() << "\n";
 	for (int i = 0; i < mfh.getNumberProcesses() * 3; i++) {
 		cout << arr[i] << " ";
 	}
 
+	//Test code for process class...
+	cout << "\n";
+	Process testProcess(1, 3, -1);
+	cout << testProcess.getTimeRemaining() << "\n";
+	cout << testProcess.getBurstTime() << "\n";
+	cout << testProcess.hasRun() << "\n";
+	cout << testProcess.getPid() << "\n";
+
 	//PROCESSES WILL BE CREATED IN EACH SCHEDULER ALGO
-	//TODO: Make switch stmt that goes by whatever algo passed in
 
 	//Testing the FCFS algo
 	cout << "\nFCFS:\n";
@@ -70,18 +92,4 @@ int main(int argc, char** argv) {
 		mlfq_scheduler.getResponseTime() << " ms\n";
 	cout << "Average waiting time: " <<
 		mlfq_scheduler.getWaitingTime() << " ms\n";
-
-	//Test code for process class...
-	cout << "\n";
-	//Process testProcess(1, 3);
-	//cout << testProcess.getTimeRemaining() << "\n";
-	//cout << testProcess.getBurstTime() << "\n";
-	//cout << testProcess.hasArrived() << "\n";
-	//cout << testProcess.getPid() << "\n";
-
-	return 0;
-}
-
-void test() {
-
 }
