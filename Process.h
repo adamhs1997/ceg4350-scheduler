@@ -3,18 +3,6 @@
 
 //Class to create "process" from input file
 
-/*
-Plan here:
-The system will read in file info
-From array produced, will create a array of these processes in each scheduler routine
-When a process arrives, set a flag indicating so
---Will only be scheduled if "has arrived"
-Probably could create processes on the fly
---Run a continuous clock, incrementing forward each process and
-  checking in array if sthg new has arrived
-*/
-
-
 class Process {
 
 public:

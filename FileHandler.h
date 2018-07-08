@@ -1,7 +1,5 @@
-// Flie reader
-// Lets you read in the info files for the processes
+//Flie reader lets you read in the info files for the processes
 
-#include <string>
 #include <fstream>
 #include <vector>
 #include <iostream>
@@ -9,18 +7,20 @@
 using namespace std;
 
 class FileHandler {
+
 private:
 	int* processArray; //to store the final process info array
 	vector<int> accum; //vector for easy internal handling
 public:
 	int* parseData(string filename);
 	int getNumberProcesses();
+
 };
 
+//Extract all data from input file, compact into int array
 int* FileHandler::parseData(string filename) {
 	//Read each line from file, place in vector
 	ifstream openFile(filename);
-	string line;
 	int nextNumber;
 	while (openFile) {
 		openFile >> nextNumber;
@@ -36,6 +36,7 @@ int* FileHandler::parseData(string filename) {
 	return processArray;
 }
 
+//Get the number of processes to be scheduled
 int FileHandler::getNumberProcesses() {
 	return accum.size() / 3;
 }
