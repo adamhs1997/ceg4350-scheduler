@@ -30,6 +30,13 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
+	//Get data from the input file
+	FileHandler fh;
+	int* processData = fh.parseData(argv[1]);
+	cout << "# processes " << fh.getNumberProcesses() << "\n";
+	for (int i = 0; i < fh.getNumberProcesses() * 3; i++) {
+		cout << processData[i] << " ";
+	}
 
 	return 0;
 }
