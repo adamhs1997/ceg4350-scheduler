@@ -48,6 +48,7 @@ int main(int argc, char** argv) {
 	//Invoke user's chosen algorithm
 	if (choice == "fcfs") {
 		//Run scheduler
+		cout << "Selected scheduling algorithm: FCFS\n";
 		FCFS fcfs_scheduler(processData, numberProcesses);
 		fcfs_scheduler.schedule();
 
@@ -64,6 +65,7 @@ int main(int argc, char** argv) {
 
 	else if (choice == "rr") {
 		//Run scheduler
+		cout << "Selected scheduling algorithm: RR\n";
 		RR rr_scheduler(processData, numberProcesses, 8);
 		rr_scheduler.schedule();
 
@@ -80,6 +82,7 @@ int main(int argc, char** argv) {
 
 	else if (choice == "mlfq") {
 		//Run scheduler
+		cout << "Selected scheduling algorithm: MLFQ\n";
 		MLFQ mlfq_scheduler(processData, numberProcesses);
 		mlfq_scheduler.schedule();
 
