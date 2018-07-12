@@ -60,7 +60,7 @@ void RR::schedule() {
 	//Run the scheduler in a loop until we are out of processes to schedule
 	while (numberProcessesComplete != m_numProcesses) {
 		//Check to see if any process has arrived yet
-		if (clock == m_processArray[arrayIndex]) {
+		if (arrayIndex < (m_numProcesses * 3) && clock >= m_processArray[arrayIndex]) {
 			//If it has, add it to ready queue
 			Process newProcess(m_processArray[arrayIndex - 1],
 				m_processArray[arrayIndex + 1], m_processArray[arrayIndex]);
