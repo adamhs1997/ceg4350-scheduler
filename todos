@@ -2,3 +2,6 @@ TODO...
 Figure out how file I/O works in cpp
 Devleop queues for the processes
 Make everything look pretty
+
+MAJOR ISSUE:
+FIGURE OUT HOW TO COMPILE WITHOUT -std=c++14 TAG!!1
